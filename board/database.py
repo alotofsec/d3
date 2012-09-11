@@ -24,16 +24,5 @@ db_session = scoped_session(sessionmaker(autocommit=False,
 Base = declarative_base()
 
 def init_db():
-    from sqlalchemy import Column, Integer, String
-    from sqlalchemy.ext.declarative import declarative_base
-    from board.database import metadata, db_session
-    from board.models import SiteInfo
-    class SiteInfo(Base):
-        __tablename__ = "site-info"
-        id = Column(Integer, primary_key=True)
-        site_title = Column(String(length=50), nullable = False)
-        site_slogan = Column(String(length=200), nullable = False)
-        site_desc = Column(String(length=200), nullable = False)
-        site_root = Column(String(length=50), nullable = False)
-
+    import board.models
     Base.metadata.create_all(bind=engine)
