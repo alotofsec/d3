@@ -13,3 +13,4 @@ from board.database import db_session
 def shutdown_session(exception=None):
     db_session.remove()
 
+

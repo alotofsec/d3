@@ -14,16 +14,26 @@ db_name = config.get('db', 'db_name')
 
 engine = create_engine('mysql://%s:%s@localhost/%s?charset=utf8' % 
         (db_id, db_password, db_name))
+
 metadata = MetaData()
+
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
                                          bind=engine))
+
 Base = declarative_base()
-Base.query = db_session.query_property()
 
 def init_db():
-    # import all modules here that might define models so that
-    # they will be registered properly on the metadata.  Otherwise
-    # you will have to import them first before calling init_db()
-    import board.models
-    metadata.create_all(bind=engine)
+    from sqlalchemy import Column, Integer, String
+    from sqlalchemy.ext.declarative import declarative_base
+    from board.database import metadata, db_session
+    from board.models import SiteInfo
+    class SiteInfo(Base):
+        __tablename__ = "site-info"
+        id = Column(Integer, primary_key=True)
+        site_title = Column(String(length=50), nullable = False)
+        site_slogan = Column(String(length=200), nullable = False)
+        site_desc = Column(String(length=200), nullable = False)
+        site_root = Column(String(length=50), nullable = False)
+
+    Base.metadata.create_all(bind=engine)
